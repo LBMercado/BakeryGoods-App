@@ -1,0 +1,28 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP .NET Core service.
+
+version: '3.9'
+
+services:
+  bakery-goods-api:
+    container_name: "bakery-goods-api"
+    image: bakery-goods-api
+    build:
+      context: .
+      dockerfile: ./bakery-goods-api/Dockerfile
+    ports:
+      - "5000:80"
+    depends_on:
+      - backend-server-db
+  backend-server-db:
+    container_name: "sql-server-db"
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    ports:
+      - "1433:1433"
+    environment: 
+      SA_PASSWORD: "<your-password-here>"
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+    volumes:
+      - backend-server-data:/var/opt/mssql
+volumes:
+  backend-server-data:
